@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, } from '@nestjs/common';
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Track, TrackDocument } from "../../schemas/tracks.schema";
@@ -10,7 +10,10 @@ export class TracksController {
   constructor(@InjectModel(Track.name) private trackModel:Model<TrackDocument>) {}
 
   @Get()
-  async getAll() {
+  async getAll(@Query('albumId') albumId?: string) {
+    if (albumId) {
+      return this.trackModel.find({ album: albumId });
+    }
     return this.trackModel.find();
   }
 
