@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Track, TrackDocument } from "../../schemas/tracks.schema";
@@ -15,23 +15,33 @@ export class TracksController {
   }
 
   @Get(":id")
-  async getOne(@Param("id") id:string) {
+  async getOne(@Param('id') id: string) {
     const track = await this.trackModel.findOne({_id:id});
     if(!track) {
-      throw new NotFoundError("Track is not found")
+      throw new NotFoundError('Track is not found');
     }
     return track
   }
 
 
   @Post()
-  async createArtist(@Body() trackDto:CreateTrackDto) {
+  async createArtist(@Body() trackDto: CreateTrackDto) {
     return await this.trackModel.create({
-      name:trackDto.name,
-      album:trackDto.album,
-      length:trackDto.length,
-      number:trackDto.number,
+      name: trackDto.name,
+      album: trackDto.album,
+      length: trackDto.length,
+      number: trackDto.number,
     })
+  }
+
+
+  @Delete(':id')
+  async deleteTrack(@Param('id') id: string) {
+    const deletedTrack = await this.trackModel.findByIdAndDelete(id);
+    if (!deletedTrack) {
+      throw new NotFoundError('track not found');
+    }
+    return 'track has deleted';
   }
 
 

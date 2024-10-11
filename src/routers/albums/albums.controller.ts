@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { InjectModel } from "@nestjs/mongoose";
 import { Album, AlbumDocument } from "../../schemas/albums.schema";
 import { Model } from "mongoose";
@@ -16,7 +16,7 @@ export class AlbumsController {
     return this.albumModel.find();
   }
 
-  @Get(":id")
+  @Get(':id')
   async getOne(@Param("id") id:string) {
     const album = await this.albumModel.findOne({_id:id});
     if(!album) {
@@ -37,6 +37,16 @@ export class AlbumsController {
       yearOfProduction:albumDto.yearOfProduction,
       image: file ? "images/" + file.filename : null,
     });
+  }
+
+
+  @Delete(':id')
+  async deleteAlbum(@Param('id') id: string) {
+    const deletedAlbum = await this.albumModel.findByIdAndDelete(id);
+    if (!deletedAlbum) {
+      throw new NotFoundError('Album not found');
+    }
+    return 'Album has deleted';
   }
 
 
