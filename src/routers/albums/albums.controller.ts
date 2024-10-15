@@ -17,11 +17,13 @@ import { NotFoundError } from 'rxjs';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateAlbumDto } from './create-album.dto';
 import { TokenAuthGuard } from '../../auth/token-auth.guard';
+import { RoleGuard } from '../../auth/role-auth-guard';
 
 @Controller('albums')
 export class AlbumsController {
-  constructor(@InjectModel(Album.name) private albumModel:Model<AlbumDocument>) {}
-
+  constructor(
+    @InjectModel(Album.name) private albumModel: Model<AlbumDocument>,
+  ) {}
 
   @Get()
   async getAll(@Query('artistId') artistId?: string) {
@@ -48,14 +50,13 @@ export class AlbumsController {
     @UploadedFile() file:Express.Multer.File
   ){
     return await this.albumModel.create({
-      artist:albumDto.artist,
-      title:albumDto.title,
+      artist: albumDto.artist,
+      title: albumDto.title,
       yearOfProduction:albumDto.yearOfProduction,
-      image: file ? "images/" + file.filename : null,
+      image: file ? 'images/' + file.filename : null,
     });
   }
-
-
+  @UseGuards(RoleGuard)
   @Delete(':id')
   async deleteAlbum(@Param('id') id: string) {
     const deletedAlbum = await this.albumModel.findByIdAndDelete(id);
@@ -65,5 +66,3 @@ export class AlbumsController {
     return 'Album has deleted';
   }
 }
-
-

@@ -5,6 +5,7 @@ import { Track, TrackDocument } from "../../schemas/tracks.schema";
 import { NotFoundError } from "rxjs";
 import { CreateTrackDto } from "./create-track.dto";
 import { TokenAuthGuard } from '../../auth/token-auth.guard';
+import { RoleGuard } from '../../auth/role-auth-guard';
 
 @Controller('tracks')
 export class TracksController {
@@ -40,6 +41,7 @@ export class TracksController {
 
 
   @Delete(':id')
+  @UseGuards(RoleGuard)
   async deleteTrack(@Param('id') id: string) {
     const deletedTrack = await this.trackModel.findByIdAndDelete(id);
     if (!deletedTrack) {

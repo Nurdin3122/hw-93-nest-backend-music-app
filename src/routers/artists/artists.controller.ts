@@ -6,6 +6,7 @@ import { CreateArtistDto } from './create-artist.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { NotFoundError } from 'rxjs';
 import { TokenAuthGuard } from '../../auth/token-auth.guard';
+import { RoleGuard } from '../../auth/role-auth-guard';
 
 @Controller('artists')
 export class ArtistsController {
@@ -40,6 +41,7 @@ export class ArtistsController {
   }
 
   @Delete(':id')
+  @UseGuards(RoleGuard)
   async deleteArtist(@Param('id') id: string) {
     const deletedArtist = await this.artistModel.findByIdAndDelete(id);
     if (!deletedArtist) {

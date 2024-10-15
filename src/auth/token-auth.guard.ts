@@ -1,7 +1,10 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../schemas/users.shema';
 import { Model } from 'mongoose';
-import { CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+} from '@nestjs/common';
 
 export class TokenAuthGuard implements CanActivate {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
@@ -12,9 +15,9 @@ export class TokenAuthGuard implements CanActivate {
       return false;
     }
 
-    const [,token] = headerValue.split(' ');
+    const [, token] = headerValue.split(' ');
 
-    if(!token) {
+    if (!token) {
       return false;
     }
 
@@ -27,5 +30,3 @@ export class TokenAuthGuard implements CanActivate {
     return true;
   }
 }
-
-
