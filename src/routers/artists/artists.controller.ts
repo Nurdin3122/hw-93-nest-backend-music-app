@@ -46,9 +46,6 @@ export class ArtistsController {
     return 'Artist has deleted';
   }
 
-
-
-
 }
 
 

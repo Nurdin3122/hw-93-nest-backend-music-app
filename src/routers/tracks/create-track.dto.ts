@@ -1,6 +1,6 @@
 export class CreateTrackDto {
-  album:string;
-  name:string;
-  number:number;
-  length:string
+  album: string;
+  name: string;
+  number: number;
+  length: string;
 }
